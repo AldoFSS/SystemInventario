@@ -16,7 +16,7 @@ public class Producto
     public void MostrarInformacion()
     {
         Console.WriteLine($"Código: {codigo}");
-        Console.WriteLine($"Nombre: {nombre}");
+        Console.WriteLine("Nombre: Producto desconocido");
         Console.WriteLine($"Precio: {precio:C}");
         Console.WriteLine($"Cantidad en inventario: {cantidad}");
     }
