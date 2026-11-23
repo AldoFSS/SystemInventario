@@ -1,49 +1,20 @@
 
-name: Despliegue del Sistema de Inventario
-
-on:
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-jobs:
-  deploy:
-    runs-on: windows-latest
-
-    steps:
-      - name: Descargar version liberada
-        shell: pwsh
-        run: |
-          $url = "https://github.com/${{ github.repository }}/releases/download/v1.0.2/sistema-inventario-v1.0.2.zip"
-          Invoke-WebRequest -Uri $url -OutFile "inventario.zip"
-
-      - name: Preparar carpeta de despliegue
-        shell: pwsh
-        run: |
-          New-Item -ItemType Directory -Path "despliegue" -Force
-          Expand-Archive -Path "inventario.zip" -DestinationPath "despliegue"
-
-      - name: Verificar archivos
-        shell: pwsh
-        run: |
-          Get-ChildItem "despliegue"
-          if (-not (Test-Path "despliegue/Sistema-de-inventario.exe")) {
-            throw "No se encontro el ejecutable"
-          }
-
       - name: Ejecutar sistema
         shell: pwsh
         run: |
           $resultado = & "./despliegue/Sistema-de-inventario.exe"
+          $codigoSalida = $LASTEXITCODE
+
           $resultado | Out-Host
 
-          if ($LASTEXITCODE -ne 0) {
+          if ($codigoSalida -ne 0) {
             throw "El programa termino con un error"
           }
 
-          if ($resultado -notmatch "PROD001" -or
-              $resultado -notmatch "Laptop Lenovo") {
+          $texto = $resultado -join "`n"
+
+          if ($texto -notmatch "PROD001" -or
+              $texto -notmatch "Laptop Lenovo") {
             throw "Los datos del producto no son correctos"
           }
 
