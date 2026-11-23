@@ -14,4 +14,3 @@ class Program
         producto1.MostrarInformacion();
     }
 }
-int numero = ;
