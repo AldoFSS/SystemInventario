@@ -1,4 +1,4 @@
-class Producto
+public class Producto
 {
     private readonly string codigo;
     private readonly string nombre;
